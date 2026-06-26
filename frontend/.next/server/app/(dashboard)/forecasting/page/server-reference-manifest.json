@@ -1,0 +1,13 @@
+{
+  "node": {
+    "1a2aba2deae4ab04801951626300dac10d8132b3": {
+      "workers": {
+        "app/(dashboard)/forecasting/page": "[project]/.next-internal/server/app/(dashboard)/forecasting/page/actions.js { ACTIONS_MODULE0 => \"[project]/app/actions/forecasting.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)"
+      },
+      "layer": {
+        "app/(dashboard)/forecasting/page": "action-browser"
+      }
+    }
+  },
+  "edge": {}
+}

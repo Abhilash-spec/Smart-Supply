@@ -1,0 +1,864 @@
+# SmartSupply AI
+
+## Product Requirements Document (PRD)
+
+### Version: 2.0
+### Last Updated: 2026-06-16
+### Status: Approved
+
+### Product Name: SmartSupply AI
+### Product Category: B2B SaaS + Marketplace + Supply Chain Intelligence Platform
+
+---
+
+# 1. Executive Summary
+
+SmartSupply AI is a cloud-native, multi-tenant B2B SaaS platform that serves as the operating system for retail supply chains. It connects retailers (kirana stores, pharmacies, hardware stores, grocery stores, electronics stores), wholesalers, distributors, manufacturers, and delivery partners into a unified ecosystem.
+
+The platform provides real-time inventory visibility, AI-powered demand forecasting, intelligent procurement automation, supplier marketplace, multi-channel notifications, and comprehensive business analytics — enabling every retailer to procure the right products, at the right time, from the right supplier, at the best price.
+
+SmartSupply AI eliminates inventory mismanagement, reduces stockouts by up to 80%, minimizes dead inventory by 60%, improves cash flow by 25%, and increases retailer profitability by 15-30%.
+
+---
+
+# 2. Vision Statement
+
+Become the operating system for retail supply chains — connecting every retailer with every supplier through AI-driven intelligence.
+
+---
+
+# 3. Mission Statement
+
+Enable every retailer to procure the right products at the right time from the right supplier using AI-driven insights, marketplace connectivity, and automated workflows.
+
+---
+
+# 4. Business Objectives
+
+### Year 1 Targets
+* 10,000 active retailers
+* 1,000 verified suppliers
+* ₹100 Crore GMV (Gross Merchandise Value)
+* 50,000 monthly transactions
+* ₹5 Crore ARR (Annual Recurring Revenue)
+
+### Year 3 Targets
+* 100,000 active retailers
+* 15,000 verified suppliers
+* ₹1,000 Crore GMV
+* 500,000 monthly transactions
+* ₹50 Crore ARR
+
+### Year 5 Targets
+* 500,000 active retailers
+* 50,000 verified suppliers
+* National supply chain ecosystem coverage
+* ₹5,000 Crore GMV
+* ₹200 Crore ARR
+* International expansion (Southeast Asia)
+
+---
+
+# 5. Problem Statement
+
+### Retailer Pain Points
+* **Inventory Stockouts**: 30-40% of retailers experience weekly stockouts, losing 5-15% of potential revenue.
+* **Overstocking**: Average retailer holds 25% excess inventory, tying up working capital.
+* **Poor Supplier Visibility**: No centralized way to discover, compare, or evaluate suppliers.
+* **Manual Procurement**: 90% of small retailers use phone calls, WhatsApp, and paper-based ordering.
+* **No Demand Forecasting**: Zero predictive capability leads to reactive inventory management.
+* **Cash Flow Challenges**: Overstocking and stockouts create cash flow volatility.
+* **Multi-Vendor Coordination**: Managing 10-50 suppliers via phone/WhatsApp is error-prone and time-consuming.
+* **No Analytics**: Most retailers lack any data-driven insights into their business performance.
+* **Pricing Opacity**: Cannot compare prices across suppliers efficiently.
+* **Compliance Burden**: GST invoicing, expiry tracking, and regulatory compliance are manual.
+
+### Supplier Pain Points
+* **Lead Generation**: Difficulty reaching new retail customers cost-effectively.
+* **Order Management**: Manual order processing creates errors and delays.
+* **Inventory Visibility**: Retailers cannot see real-time supplier stock availability.
+* **Payment Collection**: Delayed payments and credit management are major challenges.
+* **Market Intelligence**: No data on demand patterns across their customer base.
+
+---
+
+# 6. Competitive Analysis
+
+### Direct Competitors
+
+| Competitor | Strengths | Weaknesses | SmartSupply AI Advantage |
+|-----------|-----------|------------|------------------------|
+| **Udaan** | Large marketplace, logistics | No inventory management, no forecasting | Integrated inventory + marketplace + AI |
+| **IndiaMART** | Supplier directory, discovery | No transactions, no inventory | End-to-end transactional platform |
+| **Zoho Inventory** | Good inventory features | No marketplace, no supplier network | Marketplace + AI forecasting |
+| **Vyapar** | Simple billing for SMEs | Limited inventory, no procurement | Enterprise-grade with AI |
+| **Oracle NetSuite** | Enterprise ERP | Expensive, complex, not SME-friendly | Affordable, SME-first design |
+| **SAP Business One** | Enterprise features | Very expensive, heavy implementation | Cloud-native, instant setup |
+| **Amazon Business** | Large catalog, delivery | Not focused on retailer inventory mgmt | Retailer-centric with full SaaS tools |
+| **Shopify B2B** | Good e-commerce | No supply chain focus | Supply chain native |
+
+### Competitive Moat
+1. **AI-First**: Demand forecasting, auto-reordering, supplier recommendation — competitors don't have this.
+2. **Unified Platform**: Inventory + Marketplace + Procurement + Analytics in one platform.
+3. **Network Effects**: More retailers attract more suppliers, which attract more retailers.
+4. **Data Moat**: Supply chain transaction data enables increasingly accurate AI predictions.
+5. **Localization**: Built for Indian retail ecosystem (kirana, pharmacy, hardware).
+
+---
+
+# 7. Target Users
+
+## 7.1 Retailers
+* **Kirana Stores** — General merchandise, FMCG, daily essentials
+* **Pharmacies** — Medicines, health products (requires batch/expiry tracking)
+* **Electronics Stores** — Consumer electronics, accessories (requires serial number tracking)
+* **Hardware Stores** — Tools, construction materials, plumbing, electrical
+* **Grocery Stores** — Fresh produce, packaged food, beverages
+* **Clothing & Apparel** — Fashion retail, accessories
+* **Stationery & Books** — Office supplies, educational materials
+* **Auto Parts** — Vehicle spare parts, accessories
+
+## 7.2 Suppliers
+* **Manufacturers** — Direct product manufacturers
+* **Wholesalers** — Bulk distributors
+* **Distributors** — Regional distribution networks
+* **Importers** — International product sourcing
+
+## 7.3 Delivery Partners
+* **Logistics Companies** — Fleet-based delivery services
+* **Local Delivery Agents** — Last-mile delivery personnel
+* **Third-Party Logistics (3PL)** — Integrated logistics providers
+
+## 7.4 Platform Operations
+* **Platform Admin** — Internal operations and moderation team
+* **Super Admin** — System-level administration
+
+---
+
+# 8. User Personas
+
+### Persona 1: Rajesh — Kirana Store Owner
+* **Age**: 35-50
+* **Tech Comfort**: Low-Medium (uses WhatsApp, basic smartphone)
+* **Business Size**: ₹5-20 Lakh monthly revenue, 500-2000 SKUs
+* **Goals**: Never run out of bestselling products, buy at best prices, reduce wastage
+* **Pain Points**: Calls 15+ suppliers weekly, maintains paper register, no visibility into what's selling fast
+* **Decision Criteria**: Ease of use, Hindi/regional language support, mobile-first, affordable pricing
+
+### Persona 2: Priya — Pharmacy Owner
+* **Age**: 30-45
+* **Tech Comfort**: Medium (uses pharmacy billing software)
+* **Business Size**: ₹10-50 Lakh monthly revenue, 3000-8000 SKUs
+* **Goals**: Strict expiry management, batch tracking, regulatory compliance, reduce near-expiry waste
+* **Pain Points**: Manual expiry tracking, multiple distributor coordination, returns management
+* **Decision Criteria**: Compliance features, expiry alerts, integration with existing billing
+
+### Persona 3: Amit — Electronics Store Chain Manager
+* **Age**: 28-40
+* **Tech Comfort**: High (uses multiple software tools)
+* **Business Size**: ₹50 Lakh-5 Crore monthly revenue, 5-20 stores, 5000-15000 SKUs
+* **Goals**: Multi-location inventory visibility, centralized procurement, analytics-driven decisions
+* **Pain Points**: Stock transfers between locations, inconsistent pricing, no demand patterns
+* **Decision Criteria**: Multi-location support, advanced analytics, API integrations
+
+### Persona 4: Suresh — FMCG Distributor
+* **Age**: 35-55
+* **Tech Comfort**: Medium
+* **Business Size**: ₹1-10 Crore monthly revenue, 500+ retailer customers
+* **Goals**: Increase sales, reach more retailers, manage orders efficiently, reduce payment delays
+* **Pain Points**: Order management chaos, retailer credit management, delivery coordination
+* **Decision Criteria**: Order management, credit tracking, route optimization
+
+### Persona 5: Vikram — Regional Manufacturer
+* **Age**: 40-60
+* **Tech Comfort**: Low-Medium
+* **Business Size**: ₹5-50 Crore annual revenue
+* **Goals**: Expand distribution network, direct retailer access, demand visibility
+* **Pain Points**: Dependent on distributors, no demand data, limited market reach
+* **Decision Criteria**: Market reach, demand insights, reliable platform
+
+---
+
+# 9. User Roles & Permissions
+
+| Role | Description | Key Permissions |
+|------|------------|----------------|
+| **Super Admin** | Platform-level administration | Full system access, tenant management, billing |
+| **Platform Admin** | Day-to-day platform operations | User moderation, supplier verification, support |
+| **Retail Owner** | Retail business owner | Full org access, billing, settings, all features |
+| **Retail Manager** | Store/location manager | Inventory, orders, reports (no billing/settings) |
+| **Store Employee** | Front-line store staff | Inventory ops (stock in/out), POS, basic orders |
+| **Supplier Owner** | Supplier business owner | Full supplier portal, listings, orders, analytics |
+| **Supplier Staff** | Supplier operations team | Order processing, inventory updates, shipments |
+| **Distributor** | Distribution network operator | Multi-supplier management, route planning, credit |
+| **Manufacturer** | Product manufacturer | Product catalog, distributor management, demand data |
+| **Delivery Partner** | Logistics personnel | Delivery assignments, proof of delivery, navigation |
+
+---
+
+# 10. Feature Specification
+
+## PHASE 1 — MVP (Months 1-6)
+
+### 10.1 Authentication & Onboarding
+
+#### 10.1.1 Registration
+* Email + Password registration
+* Mobile number + OTP registration
+* Google OAuth login
+* Business type selection (Retailer/Supplier/Distributor)
+* Organization setup wizard
+* GST verification (optional)
+* Store location setup
+
+#### 10.1.2 Authentication
+* Email + Password login
+* Mobile OTP login
+* Google SSO
+* Multi-Factor Authentication (TOTP, SMS)
+* Biometric login (mobile)
+* Session management (multi-device)
+* Password reset flow
+* Account recovery
+
+#### 10.1.3 Onboarding
+* Role-based onboarding wizard
+* Business profile setup
+* Store/warehouse location setup
+* Initial product catalog import (CSV, Excel)
+* Supplier connection suggestions
+* Feature tour / guided walkthrough
+
+---
+
+### 10.2 Inventory Management
+
+#### 10.2.1 Product Catalog
+* Create/Edit/Delete products
+* Product name, description, images (up to 10)
+* SKU management (auto-generate or custom)
+* Barcode management (EAN-13, UPC-A, Code-128)
+* QR code generation
+* Product categories (hierarchical, up to 4 levels)
+* Brand management
+* Product attributes (size, color, weight, dimensions)
+* Product variants (size × color matrix)
+* Unit of measure (piece, kg, liter, box, case, dozen)
+* Tax category (GST rates: 0%, 5%, 12%, 18%, 28%)
+* HSN/SAC code mapping
+* Minimum order quantity
+* Reorder level
+* Maximum stock level
+* Product images with CDN delivery
+* Bulk product import (CSV, Excel)
+* Bulk product export
+* Product duplication
+* Product archive/soft delete
+
+#### 10.2.2 Stock Management
+* Stock In (purchase receipt)
+* Stock Out (sales, damages, returns)
+* Stock adjustment (with reason codes)
+* Stock transfer (between locations)
+* Physical stock count
+* Cycle counting
+* Stock reconciliation
+* Real-time stock level dashboard
+* Stock movement history (full audit trail)
+* Low stock alerts (configurable thresholds)
+* Overstock alerts
+* Zero stock alerts
+
+#### 10.2.3 Batch & Expiry Tracking
+* Batch number assignment on stock receipt
+* Manufacturing date tracking
+* Expiry date tracking
+* Near-expiry alerts (configurable: 30/60/90 days)
+* Expired product quarantine
+* FIFO/FEFO enforcement
+* Batch-wise stock reports
+* Expiry-wise stock reports
+
+#### 10.2.4 Warehouse & Location Management
+* Multiple warehouse/store setup
+* Location hierarchy (warehouse → zone → aisle → shelf → bin)
+* Location-wise stock visibility
+* Inter-location stock transfer
+* Default receiving location
+* Default dispatch location
+
+#### 10.2.5 Barcode & QR
+* Barcode scanning (camera-based)
+* Barcode label generation and printing
+* QR code generation for products
+* Barcode lookup (scan to find product)
+* Batch barcode printing
+
+---
+
+### 10.3 Supplier Marketplace
+
+#### 10.3.1 Supplier Discovery
+* Supplier directory with search
+* Filter by category, location, rating, minimum order
+* Supplier profile pages (about, products, ratings, certifications)
+* Supplier verification badges (verified, premium, trusted)
+* Supplier comparison (side-by-side)
+* Featured suppliers
+* Recently added suppliers
+* Nearby suppliers (geo-based)
+
+#### 10.3.2 Product Listings
+* Supplier product catalog browsing
+* Product search with filters (price, brand, category, availability)
+* Product detail pages
+* Real-time availability indicator
+* Price display (with/without tax)
+* Minimum order quantity display
+* Bulk pricing tiers
+* Product images and specifications
+* Similar products suggestions
+
+#### 10.3.3 Supplier Inventory Visibility
+* Real-time supplier stock levels
+* Stock availability indicators (in stock, low stock, out of stock)
+* Expected restock dates
+* Lead time information
+
+#### 10.3.4 Product & Supplier Comparison
+* Compare up to 4 products side-by-side
+* Compare up to 4 suppliers side-by-side
+* Comparison criteria: price, MOQ, lead time, rating, delivery terms
+
+---
+
+### 10.4 Procurement
+
+#### 10.4.1 Purchase Orders
+* Create purchase order (manual)
+* Create purchase order (from reorder suggestions)
+* PO line items with quantity, price, tax
+* PO approval workflow (configurable)
+* PO status tracking (draft → submitted → approved → sent → acknowledged → fulfilled → closed)
+* PO amendments
+* PO cancellation
+* PO templates (recurring orders)
+* PO history and search
+* PO print/export (PDF)
+* Multi-supplier PO splitting
+
+#### 10.4.2 Request for Quotation (RFQ)
+* Create RFQ with product requirements
+* Send RFQ to multiple suppliers
+* Supplier quotation submission
+* Quotation comparison matrix
+* Quotation acceptance/rejection
+* Auto-convert accepted quotation to PO
+* RFQ expiry management
+
+#### 10.4.3 Approval Workflow
+* Configurable approval chains
+* Amount-based approval routing
+* Multi-level approvals
+* Approval delegation
+* Approval notifications (email, push, in-app)
+* Approval history and audit trail
+
+#### 10.4.4 Goods Receipt
+* Receive against purchase order
+* Partial receipt
+* Quality inspection checklist
+* Discrepancy reporting (damaged, short, wrong items)
+* Goods receipt note (GRN) generation
+* Auto-update inventory on receipt
+
+---
+
+### 10.5 Analytics & Reporting
+
+#### 10.5.1 Sales Analytics
+* Revenue by period (daily, weekly, monthly, yearly)
+* Revenue by product/category/brand
+* Top selling products
+* Sales trend analysis
+* Sales velocity
+* Average order value
+* Customer purchase frequency
+
+#### 10.5.2 Inventory Analytics
+* Current stock value (at cost, at retail)
+* Inventory turnover ratio
+* Days of inventory on hand
+* Stock aging analysis
+* Dead stock identification (no movement in 90+ days)
+* Slow-moving stock identification
+* Fast-moving stock identification
+* ABC analysis (Pareto)
+* Stock accuracy metrics
+
+#### 10.5.3 Procurement Analytics
+* Purchase spend by supplier
+* Purchase spend by category
+* Supplier lead time analysis
+* Order fulfillment rate by supplier
+* Price trend analysis
+* Procurement savings opportunities
+
+#### 10.5.4 Stockout Analytics
+* Stockout frequency by product
+* Stockout duration
+* Estimated lost sales from stockouts
+* Stockout root cause analysis
+* Stockout prediction alerts
+
+#### 10.5.5 Dashboard
+* Role-specific dashboards (retailer, supplier, admin)
+* Customizable widgets
+* Real-time KPI cards
+* Interactive charts (bar, line, pie, area)
+* Date range selection
+* Comparison periods
+* Export to PDF/Excel
+
+---
+
+### 10.6 Notifications
+
+#### 10.6.1 Channels
+* In-app notifications (notification center)
+* Email notifications
+* SMS notifications
+* Push notifications (mobile)
+* WhatsApp notifications (Phase 2)
+
+#### 10.6.2 Alert Types
+* Low stock alerts
+* Zero stock alerts
+* Expiry alerts (near-expiry, expired)
+* Purchase order status changes
+* Order status updates
+* Delivery updates
+* Payment reminders
+* System announcements
+* Price change alerts
+* New supplier product alerts
+
+#### 10.6.3 Preferences
+* Per-channel enable/disable
+* Per-alert-type enable/disable
+* Quiet hours configuration
+* Notification digest (daily/weekly summary)
+
+---
+
+## PHASE 2 — Growth (Months 7-12)
+
+### 10.7 Marketplace Commerce
+
+#### 10.7.1 Shopping Cart
+* Add to cart from marketplace
+* Multi-vendor cart support
+* Cart quantity adjustment
+* Cart persistence (across sessions)
+* Save for later
+* Cart summary with tax calculation
+
+#### 10.7.2 Checkout
+* Order review
+* Delivery address selection
+* Delivery date preference
+* Payment method selection
+* Order notes
+* Apply promotions/coupons
+* Order confirmation
+* Order splitting by vendor (automatic)
+
+#### 10.7.3 Multi-Vendor Ordering
+* Single cart, multiple suppliers
+* Automatic order splitting by supplier
+* Per-supplier order tracking
+* Consolidated order history
+* Per-supplier delivery tracking
+
+#### 10.7.4 Reviews & Ratings
+* Product reviews (1-5 stars + text)
+* Supplier ratings (1-5 stars)
+* Rating categories (quality, delivery, pricing, communication)
+* Review moderation
+* Verified purchase badge
+* Review responses from suppliers
+* Aggregate rating calculation
+
+#### 10.7.5 Supplier Performance
+* Supplier scorecard
+* On-time delivery rate
+* Order fulfillment accuracy
+* Response time metrics
+* Return rate
+* Customer satisfaction score
+* Performance trend charts
+
+---
+
+### 10.8 AI Forecasting
+
+#### 10.8.1 Demand Forecasting
+* Product-level demand prediction (7/14/30/90 day)
+* Category-level demand prediction
+* Seasonal pattern detection
+* Holiday/event impact analysis
+* Weather-based adjustments (future)
+* Confidence intervals on predictions
+* Forecast accuracy tracking (MAPE, RMSE)
+
+#### 10.8.2 Reorder Prediction
+* Optimal reorder point calculation
+* Optimal reorder quantity (EOQ model)
+* Safety stock recommendations
+* Lead time-adjusted reorder alerts
+* Auto-reorder suggestions (one-click order)
+
+#### 10.8.3 Inventory Optimization
+* Overstock detection and alerts
+* Stockout prediction
+* Inventory health score
+* Working capital optimization suggestions
+* Product lifecycle stage detection (growth, maturity, decline)
+
+#### 10.8.4 Supplier Recommendation
+* Best supplier for each product (price, delivery, quality)
+* Alternative supplier suggestions
+* Supplier risk scoring
+* New supplier recommendations based on purchase patterns
+
+---
+
+### 10.9 Financial Features
+
+#### 10.9.1 Invoicing
+* Auto-generate GST invoices from orders
+* Invoice templates (customizable)
+* Invoice numbering (configurable)
+* E-invoice generation (GST e-invoicing)
+* Credit notes
+* Debit notes
+* Invoice export (PDF, Excel)
+* Bulk invoice generation
+
+#### 10.9.2 Credit Management
+* Customer credit limits
+* Credit balance tracking
+* Credit period management (15/30/45/60 days)
+* Overdue payment alerts
+* Credit utilization reports
+* Payment history
+
+#### 10.9.3 Payment Gateway
+* Online payment (Razorpay primary, Stripe international)
+* UPI payments
+* Net banking
+* Credit/debit card
+* Wallet payments
+* COD (Cash on Delivery)
+* Payment status tracking
+* Refund processing
+* Payment reconciliation
+
+#### 10.9.4 BNPL (Buy Now Pay Later)
+* BNPL integration for qualified retailers
+* Credit assessment
+* EMI options
+* Auto-debit on due date
+* BNPL utilization dashboard
+
+---
+
+## PHASE 3 — Scale (Months 13-24)
+
+### 10.10 AI Procurement Agent
+
+#### 10.10.1 Auto Reordering
+* Fully automated reorder based on AI predictions
+* Configurable auto-order rules
+* Auto-supplier selection
+* Auto-PO generation and submission
+* Human-in-the-loop approval for high-value orders
+* Auto-order audit trail
+
+#### 10.10.2 Supplier Negotiation
+* Historical price analysis
+* Market price benchmarks
+* Negotiation recommendation engine
+* Bulk order consolidation suggestions
+* Volume discount opportunities
+
+#### 10.10.3 Dynamic Pricing
+* Demand-based pricing suggestions
+* Competitor price monitoring
+* Margin optimization recommendations
+* Promotional pricing engine
+
+#### 10.10.4 Inventory Risk Prediction
+* Supply disruption risk scoring
+* Alternative product recommendations
+* Emergency procurement triggers
+* Seasonal risk forecasting
+
+---
+
+### 10.11 Advanced AI
+
+#### 10.11.1 AI Chat Assistant (Copilot)
+* Natural language inventory queries ("What's my stock of Parle-G?")
+* Procurement questions ("Who's the cheapest supplier for rice?")
+* Analytics questions ("What was my revenue last month?")
+* Actionable suggestions ("You should reorder detergent by Friday")
+* Contextual help and guidance
+
+#### 10.11.2 Voice Assistant
+* Voice-based inventory lookup
+* Voice-based order placement
+* Hindi + English + regional language support
+* Hands-free operation for warehouse staff
+
+#### 10.11.3 WhatsApp Assistant
+* Order placement via WhatsApp
+* Stock check via WhatsApp
+* Alert delivery via WhatsApp
+* Payment reminders via WhatsApp
+
+#### 10.11.4 OCR Invoice Processing
+* Upload supplier invoice image/PDF
+* Auto-extract line items, quantities, prices
+* Auto-match with purchase orders
+* Discrepancy detection
+* One-click goods receipt from invoice
+
+#### 10.11.5 Product Image Recognition
+* Upload product image to identify product
+* Auto-fill product details from image
+* Shelf scanning for inventory counts
+
+---
+
+# 11. User Stories
+
+### Authentication & Onboarding
+1. As a new retailer, I want to register with my mobile number so that I can start using the platform quickly.
+2. As a returning user, I want to log in with OTP so that I don't need to remember passwords.
+3. As a business owner, I want to set up MFA so that my account is secure.
+4. As a new user, I want a guided onboarding wizard so that I can configure my business quickly.
+5. As a retailer, I want to import my existing product catalog via CSV so that I don't have to add products manually.
+
+### Inventory Management
+6. As a retailer, I want to view real-time stock levels for all products so that I can avoid stockouts.
+7. As a store employee, I want to scan a barcode to find product details instantly.
+8. As a retailer, I want low stock alerts so that I can reorder before running out.
+9. As a pharmacy owner, I want expiry date tracking so that I never sell expired medicines.
+10. As a retailer, I want to record stock adjustments with reason codes so that I maintain accurate inventory.
+11. As a chain store manager, I want to view stock across all locations so that I can plan transfers.
+12. As a retailer, I want to conduct physical stock counts and reconcile with system stock.
+13. As a retailer, I want to track batch numbers for quality traceability.
+14. As a store employee, I want to generate and print barcode labels for products.
+15. As a retailer, I want dead stock reports so that I can clear non-moving inventory.
+
+### Supplier Marketplace
+16. As a retailer, I want to search for suppliers by product category and location.
+17. As a retailer, I want to compare suppliers side-by-side on price, MOQ, delivery time, and ratings.
+18. As a retailer, I want to see real-time supplier stock availability before placing an order.
+19. As a supplier, I want to create a business profile to showcase my products and capabilities.
+20. As a supplier, I want to list my products with pricing, images, and specifications.
+21. As a supplier, I want to update my stock levels so that retailers see accurate availability.
+22. As a retailer, I want to save favorite suppliers for quick reordering.
+23. As a retailer, I want to view supplier ratings and reviews from other retailers.
+24. As a retailer, I want product recommendations based on my purchase history.
+
+### Procurement
+25. As a retailer, I want to create a purchase order and send it to a supplier.
+26. As a retailer, I want to create an RFQ and send it to multiple suppliers for competitive quotes.
+27. As a retailer, I want to compare quotations from different suppliers in a matrix view.
+28. As a retail manager, I want to set up approval workflows for purchase orders above ₹50,000.
+29. As a retailer, I want to receive goods against a PO and auto-update inventory.
+30. As a retailer, I want PO templates for recurring orders to save time.
+31. As a supplier, I want to receive purchase orders and confirm or reject them.
+32. As a supplier, I want to submit quotations in response to RFQs.
+33. As a retailer, I want to track PO status from creation to delivery.
+34. As a retailer, I want to report discrepancies when received goods don't match the PO.
+
+### Analytics & Reporting
+35. As a retailer, I want a dashboard showing today's key metrics (revenue, orders, stock alerts).
+36. As a retailer, I want to see my top-selling products this month.
+37. As a retailer, I want inventory turnover analysis to identify slow-moving stock.
+38. As a retailer, I want to see estimated lost sales from stockouts.
+39. As a retailer, I want procurement spend analysis by supplier and category.
+40. As a retailer, I want to export reports as PDF or Excel.
+41. As a supplier, I want to see my order volume and fulfillment metrics.
+42. As a supplier, I want customer distribution analytics.
+
+### Notifications
+43. As a retailer, I want email/SMS/push alerts when stock falls below reorder level.
+44. As a pharmacy owner, I want alerts 30/60/90 days before product expiry.
+45. As a retailer, I want notifications when my PO status changes.
+46. As a retailer, I want to configure which notifications I receive and on which channels.
+47. As a supplier, I want instant notification when I receive a new order.
+
+### Marketplace (Phase 2)
+48. As a retailer, I want to add products from multiple suppliers to a single cart.
+49. As a retailer, I want the system to automatically split my cart into per-supplier orders.
+50. As a retailer, I want to rate and review suppliers after receiving orders.
+51. As a retailer, I want to track deliveries from each supplier independently.
+52. As a supplier, I want to respond to customer reviews.
+
+### AI (Phase 2-3)
+53. As a retailer, I want demand forecasts for my products so I can plan inventory.
+54. As a retailer, I want the AI to suggest optimal reorder quantities.
+55. As a retailer, I want to ask the AI assistant natural language questions about my business.
+56. As a retailer, I want OCR processing of supplier invoices to auto-create goods receipts.
+57. As a retailer, I want the system to auto-reorder products when stock is predicted to run out.
+
+---
+
+# 12. Non-Functional Requirements
+
+### Performance
+* Page load time: < 2 seconds (first contentful paint)
+* API response time: < 200ms (p95)
+* Search response time: < 500ms
+* Dashboard load time: < 3 seconds
+* Real-time stock updates: < 1 second propagation
+* Barcode scan to result: < 500ms
+
+### Availability
+* 99.95% uptime SLA
+* Planned maintenance windows: < 4 hours/month
+* Zero-downtime deployments
+* Multi-region failover capability
+
+### Scalability
+* 500,000 concurrent users
+* 50 million products in catalog
+* 1 million orders per day
+* 100,000 retailer tenants
+* 20,000 supplier tenants
+* 10 TB+ data storage
+
+### Security
+* AES-256 encryption at rest
+* TLS 1.3 encryption in transit
+* RBAC with row-level security
+* Comprehensive audit logging
+* OWASP Top 10 compliance
+* SOC 2 Type II readiness
+* PCI DSS compliance (for payments)
+* GDPR / India DPDP Act compliance
+
+### Accessibility
+* WCAG 2.1 AA compliance
+* Keyboard navigation support
+* Screen reader compatibility
+* Color contrast ratios > 4.5:1
+* Focus indicators on all interactive elements
+
+### Internationalization
+* Multi-language support (English, Hindi, Tamil, Telugu, Marathi, Bengali, Gujarati)
+* Multi-currency support (INR primary, USD secondary)
+* Locale-aware date/number formatting
+* RTL text support readiness
+
+---
+
+# 13. Monetization Strategy
+
+### SaaS Subscription Plans
+
+| Feature | Starter | Growth | Enterprise |
+|---------|---------|--------|-----------|
+| **Price** | ₹999/month | ₹2,999/month | Custom |
+| Products | Up to 500 | Up to 5,000 | Unlimited |
+| Locations | 1 | Up to 5 | Unlimited |
+| Users | 2 | 10 | Unlimited |
+| Suppliers | 10 | 50 | Unlimited |
+| Orders/month | 500 | 5,000 | Unlimited |
+| Analytics | Basic | Advanced | Custom |
+| AI Forecasting | — | ✓ | ✓ |
+| AI Copilot | — | Limited | Unlimited |
+| API Access | — | ✓ | ✓ |
+| Dedicated Support | — | Email | 24/7 Phone + SLA |
+| Custom Branding | — | — | ✓ |
+| Custom Domain | — | — | ✓ |
+| SLA | — | 99.9% | 99.99% |
+
+### Additional Revenue Streams
+* **Transaction Commission**: 1-3% on marketplace transactions
+* **Supplier Advertising**: Sponsored listings, featured placements
+* **Premium Analytics**: Advanced reporting add-on (₹499/month)
+* **BNPL Commission**: Revenue share with lending partners
+* **API Access**: Metered API pricing for integrations
+* **Data Insights**: Anonymized market intelligence reports (for manufacturers)
+
+---
+
+# 14. Product Roadmap
+
+## Phase 1 — Foundation (Months 1-6)
+* Authentication & Onboarding
+* Inventory Management (full feature set)
+* Supplier Marketplace (discovery & listings)
+* Procurement (POs, RFQs, approvals)
+* Analytics & Dashboards (basic)
+* Notification System
+* Admin Panel (basic)
+* Web Application (responsive)
+
+## Phase 2 — Growth (Months 7-12)
+* Marketplace Commerce (cart, checkout, multi-vendor)
+* AI Demand Forecasting
+* Reorder Prediction & Optimization
+* Reviews & Ratings
+* Financial Features (invoicing, credit, payments)
+* Mobile Applications (React Native)
+* Advanced Analytics
+* Supplier Performance Tracking
+
+## Phase 3 — Scale (Months 13-24)
+* AI Procurement Agent (auto-reorder, auto-negotiate)
+* AI Copilot (chat, voice, WhatsApp)
+* OCR Invoice Processing
+* Product Image Recognition
+* Dynamic Pricing Engine
+* BNPL Integration
+* International Expansion
+* Enterprise Features (SSO, custom domains, dedicated infra)
+* Partner API & Developer Portal
+
+---
+
+# 15. Success Metrics
+
+### Retail Metrics
+* Inventory Turnover Improvement: > 20%
+* Stockout Reduction: > 50%
+* Dead Stock Reduction: > 40%
+* Procurement Time Reduction: > 60%
+* Average Order Value Increase: > 15%
+
+### Platform Metrics
+* Monthly Active Users (MAU)
+* Daily Active Users (DAU)
+* DAU/MAU Ratio (engagement): Target > 40%
+* GMV (Gross Merchandise Value)
+* Take Rate (commission revenue / GMV)
+* Net Revenue Retention: > 120%
+* Churn Rate: < 5% monthly
+
+### Supplier Metrics
+* Order Volume per Supplier
+* Supplier Retention Rate: > 85%
+* Average Supplier Response Time: < 2 hours
+* Supplier NPS: > 50
+
+### AI Metrics
+* Forecast Accuracy (MAPE): < 15%
+* Auto-Reorder Acceptance Rate: > 70%
+* Copilot Query Resolution Rate: > 80%
+* Time Saved per Retailer: > 5 hours/week

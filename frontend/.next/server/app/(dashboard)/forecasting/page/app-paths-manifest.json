@@ -1,0 +1,3 @@
+{
+  "/(dashboard)/forecasting/page": "app/(dashboard)/forecasting/page.js"
+}

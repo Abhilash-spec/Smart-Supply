@@ -1,0 +1,61 @@
+{
+  "node": {
+    "72f45dcaeb8b4d1fc7d71e5679206c47f415a826": {
+      "workers": {
+        "app/(vendor)/vendor/catalog/page": "[project]/.next-internal/server/app/(vendor)/vendor/catalog/page/actions.js { ACTIONS_MODULE0 => \"[project]/app/actions/vendor.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)"
+      },
+      "layer": {
+        "app/(vendor)/vendor/catalog/page": "action-browser"
+      }
+    },
+    "03c7a29af16b892495262ff82aba34bd77931da5": {
+      "workers": {
+        "app/(vendor)/vendor/catalog/page": "[project]/.next-internal/server/app/(vendor)/vendor/catalog/page/actions.js { ACTIONS_MODULE0 => \"[project]/app/actions/vendor.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)"
+      },
+      "layer": {
+        "app/(vendor)/vendor/catalog/page": "action-browser"
+      }
+    },
+    "20e899b2522d206c0ba7238214b112170c95211a": {
+      "workers": {
+        "app/(vendor)/vendor/catalog/page": "[project]/.next-internal/server/app/(vendor)/vendor/catalog/page/actions.js { ACTIONS_MODULE0 => \"[project]/app/actions/vendor.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)"
+      },
+      "layer": {
+        "app/(vendor)/vendor/catalog/page": "action-browser"
+      }
+    },
+    "44b077079a7295ed91a29c99ac3d9fcb4bb40c11": {
+      "workers": {
+        "app/(vendor)/vendor/catalog/page": "[project]/.next-internal/server/app/(vendor)/vendor/catalog/page/actions.js { ACTIONS_MODULE0 => \"[project]/app/actions/vendor.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)"
+      },
+      "layer": {
+        "app/(vendor)/vendor/catalog/page": "action-browser"
+      }
+    },
+    "9438d7ad735c05d66351a0114b6d988dfaae496f": {
+      "workers": {
+        "app/(vendor)/vendor/catalog/page": "[project]/.next-internal/server/app/(vendor)/vendor/catalog/page/actions.js { ACTIONS_MODULE0 => \"[project]/app/actions/vendor.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)"
+      },
+      "layer": {
+        "app/(vendor)/vendor/catalog/page": "action-browser"
+      }
+    },
+    "26993fca929780f363c3fe79fb3d873994125d22": {
+      "workers": {
+        "app/(vendor)/vendor/catalog/page": "[project]/.next-internal/server/app/(vendor)/vendor/catalog/page/actions.js { ACTIONS_MODULE0 => \"[project]/app/actions/vendor.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)"
+      },
+      "layer": {
+        "app/(vendor)/vendor/catalog/page": "action-browser"
+      }
+    },
+    "b1fafa67c94205d20ee58d1bfaa43d254ab7b282": {
+      "workers": {
+        "app/(vendor)/vendor/catalog/page": "[project]/.next-internal/server/app/(vendor)/vendor/catalog/page/actions.js { ACTIONS_MODULE0 => \"[project]/app/actions/vendor.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)"
+      },
+      "layer": {
+        "app/(vendor)/vendor/catalog/page": "action-browser"
+      }
+    }
+  },
+  "edge": {}
+}

@@ -1,0 +1,15 @@
+const CHUNK_PUBLIC_PATH = "server/app/subscription/page.js";
+const runtime = require("../../chunks/ssr/[turbopack]_runtime.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_next_dist_6dcfff._.js");
+runtime.loadChunk("server/chunks/ssr/[root of the server]__adba9d._.js");
+runtime.loadChunk("server/chunks/ssr/[root of the server]__33bd1d._.css");
+runtime.loadChunk("server/chunks/ssr/[root of the server]__9a56b8._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_16929d._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_next_2b777e._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_@supabase_auth-js_dist_module_83ce7e._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_@supabase_postgrest-js_dist_index_mjs_e6800d._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_zod_v3_17d345._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_e2c7f0._.js");
+runtime.loadChunk("server/chunks/ssr/_d1c86d._.js");
+runtime.getOrInstantiateRuntimeModule("[project]/.next-internal/server/app/subscription/page/actions.js { ACTIONS_MODULE0 => \"[project]/app/actions/billing.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH);
+module.exports = runtime.getOrInstantiateRuntimeModule("[project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/subscription/page { MODULE_0 => \"[project]/app/layout.tsx [app-rsc] (ecmascript, Next.js server component)\", MODULE_1 => \"[project]/node_modules/next/dist/client/components/not-found-error.js [app-rsc] (ecmascript, Next.js server component)\", MODULE_2 => \"[project]/app/subscription/page.tsx [app-rsc] (ecmascript, Next.js server component)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH).exports;

@@ -1,0 +1,18 @@
+const CHUNK_PUBLIC_PATH = "server/app/(vendor)/vendor/invoices/page.js";
+const runtime = require("../../../../chunks/ssr/[turbopack]_runtime.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_next_dist_6dcfff._.js");
+runtime.loadChunk("server/chunks/ssr/[root of the server]__adba9d._.js");
+runtime.loadChunk("server/chunks/ssr/[root of the server]__33bd1d._.css");
+runtime.loadChunk("server/chunks/ssr/[root of the server]__9a56b8._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_16929d._.js");
+runtime.loadChunk("server/chunks/ssr/app_(vendor)_layout_tsx_29d096._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_next_6c1c8d._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_@supabase_auth-js_dist_module_83ce7e._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_@supabase_postgrest-js_dist_index_mjs_e6800d._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_zod_v3_17d345._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_postal-mime_src_17ddda._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_b15e21._.js");
+runtime.loadChunk("server/chunks/ssr/_09e018._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_@react-email_render_dist_node_index_mjs_83b233._.js");
+runtime.getOrInstantiateRuntimeModule("[project]/.next-internal/server/app/(vendor)/vendor/invoices/page/actions.js { ACTIONS_MODULE0 => \"[project]/app/actions/vendor.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH);
+module.exports = runtime.getOrInstantiateRuntimeModule("[project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/(vendor)/vendor/invoices/page { MODULE_0 => \"[project]/app/layout.tsx [app-rsc] (ecmascript, Next.js server component)\", MODULE_1 => \"[project]/node_modules/next/dist/client/components/not-found-error.js [app-rsc] (ecmascript, Next.js server component)\", MODULE_2 => \"[project]/app/(vendor)/layout.tsx [app-rsc] (ecmascript, Next.js server component)\", MODULE_3 => \"[project]/node_modules/next/dist/client/components/not-found-error.js [app-rsc] (ecmascript, Next.js server component)\", MODULE_4 => \"[project]/app/(vendor)/vendor/invoices/page.tsx [app-rsc] (ecmascript, Next.js server component)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH).exports;

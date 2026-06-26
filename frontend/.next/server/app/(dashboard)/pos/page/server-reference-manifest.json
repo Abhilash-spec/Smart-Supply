@@ -1,0 +1,29 @@
+{
+  "node": {
+    "857b9632fcf9a043c5f9e72e54a57778d4c3c4c9": {
+      "workers": {
+        "app/(dashboard)/pos/page": "[project]/.next-internal/server/app/(dashboard)/pos/page/actions.js { ACTIONS_MODULE0 => \"[project]/app/actions/pos.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)"
+      },
+      "layer": {
+        "app/(dashboard)/pos/page": "action-browser"
+      }
+    },
+    "8281b01a108d58d90b02621745f447504b7d1114": {
+      "workers": {
+        "app/(dashboard)/pos/page": "[project]/.next-internal/server/app/(dashboard)/pos/page/actions.js { ACTIONS_MODULE0 => \"[project]/app/actions/pos.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)"
+      },
+      "layer": {
+        "app/(dashboard)/pos/page": "action-browser"
+      }
+    },
+    "e3d860214a7eb570a888bfa203c145c671e2e96e": {
+      "workers": {
+        "app/(dashboard)/pos/page": "[project]/.next-internal/server/app/(dashboard)/pos/page/actions.js { ACTIONS_MODULE0 => \"[project]/app/actions/pos.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)"
+      },
+      "layer": {
+        "app/(dashboard)/pos/page": "action-browser"
+      }
+    }
+  },
+  "edge": {}
+}

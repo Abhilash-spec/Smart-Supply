@@ -1,0 +1,1322 @@
+# SmartSupply AI
+
+## Technical Requirements Document (TRD)
+
+### Version: 2.0
+### Last Updated: 2026-06-16
+### Status: Approved
+
+---
+
+# 1. System Architecture Overview
+
+## 1.1 Architecture Style
+**Microservices Architecture** with Event-Driven Communication
+
+The platform is decomposed into 21 independently deployable microservices, communicating via:
+- **Synchronous**: REST APIs via API Gateway
+- **Asynchronous**: Apache Kafka event streaming
+- **Real-time**: WebSocket connections (via Supabase Realtime)
+
+## 1.2 Architecture Principles
+1. **Multi-Tenancy First**: Every data model, API, and query is tenant-aware.
+2. **Event-Driven**: State changes emit domain events for decoupled processing.
+3. **API-First**: All functionality exposed through versioned REST APIs.
+4. **Cloud-Native**: Containerized, orchestrated, auto-scalable.
+5. **Security by Default**: Zero-trust, encrypted, audited.
+6. **Data Sovereignty**: Tenant data isolation at row level (Supabase RLS).
+
+## 1.3 Technology Stack
+
+### Frontend
+| Technology | Purpose | Version |
+|-----------|---------|---------|
+| Next.js | React framework, SSR, routing | 15.x |
+| React | UI library | 19.x |
+| TypeScript | Type-safe JavaScript | 5.x |
+| Tailwind CSS | Utility-first CSS | 4.x |
+| ShadCN UI | Component library | Latest |
+| React Query (TanStack) | Server state management | 5.x |
+| Zustand | Client state management | 5.x |
+| Recharts | Charts & data visualization | 2.x |
+| React Hook Form | Form management | 7.x |
+| Zod | Schema validation | 3.x |
+
+### Backend
+| Technology | Purpose | Version |
+|-----------|---------|---------|
+| FastAPI | API framework | 0.115.x |
+| Python | Backend language | 3.12+ |
+| SQLAlchemy | ORM | 2.x |
+| Pydantic | Data validation | 2.x |
+| Alembic | Database migrations | 1.x |
+| Celery | Background task processing | 5.x |
+| httpx | Async HTTP client | 0.27.x |
+
+### Database & Storage
+| Technology | Purpose |
+|-----------|---------|
+| Supabase (PostgreSQL 15+) | Primary database with RLS |
+| Supabase Auth | Authentication service |
+| Supabase Storage | File/image storage |
+| Supabase Realtime | WebSocket real-time updates |
+| Redis | Caching, sessions, rate limiting |
+| Elasticsearch 8.x | Full-text search, product search |
+| pgvector | Vector embeddings for AI |
+
+### Messaging & Events
+| Technology | Purpose |
+|-----------|---------|
+| Apache Kafka | Event streaming, async messaging |
+| Kafka Connect | Data pipeline connectors |
+
+### AI/ML
+| Technology | Purpose |
+|-----------|---------|
+| OpenAI GPT-4o | AI Copilot, NLP |
+| Llama 3.x | Self-hosted fallback LLM |
+| XGBoost | Demand forecasting |
+| Prophet | Time-series forecasting |
+| scikit-learn | ML utilities |
+| pgvector | RAG vector store |
+
+### DevOps & Infrastructure
+| Technology | Purpose |
+|-----------|---------|
+| Docker | Containerization |
+| Kubernetes (EKS/GKE) | Container orchestration |
+| Terraform | Infrastructure as Code |
+| GitHub Actions | CI/CD pipelines |
+| Prometheus | Metrics collection |
+| Grafana | Metrics visualization |
+| OpenTelemetry | Distributed tracing |
+| ELK Stack | Log aggregation |
+
+### Payment & Communication
+| Technology | Purpose |
+|-----------|---------|
+| Razorpay | Primary payment gateway (India) |
+| Stripe | International payments |
+| Twilio | SMS notifications |
+| SendGrid | Email notifications |
+| Firebase Cloud Messaging | Push notifications |
+| WhatsApp Business API | WhatsApp messaging |
+
+---
+
+# 2. High-Level Architecture Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        CLIENT LAYER                              │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
+│  │ Web App  │  │ Mobile   │  │ Admin    │  │ Supplier │       │
+│  │ (Next.js)│  │ (React   │  │ Panel    │  │ Portal   │       │
+│  │          │  │  Native) │  │          │  │          │       │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘       │
+└───────┼──────────────┼──────────────┼──────────────┼────────────┘
+        │              │              │              │
+┌───────┴──────────────┴──────────────┴──────────────┴────────────┐
+│                     API GATEWAY (Kong/Nginx)                     │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │ Rate Limiting │ Auth │ Load Balancing │ SSL Termination │    │
+│  └─────────────────────────────────────────────────────────┘    │
+└─────────────────────────────┬───────────────────────────────────┘
+                              │
+┌─────────────────────────────┴───────────────────────────────────┐
+│                      SERVICE MESH                                │
+│                                                                  │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐          │
+│  │ Identity │ │  User    │ │   Org    │ │ Catalog  │          │
+│  │ Service  │ │ Service  │ │ Service  │ │ Service  │          │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘          │
+│                                                                  │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐          │
+│  │Inventory │ │ Supplier │ │Marketplace│ │Procurement│         │
+│  │ Service  │ │ Service  │ │ Service  │ │ Service  │          │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘          │
+│                                                                  │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐          │
+│  │  Order   │ │ Shipment │ │ Payment  │ │Subscription│         │
+│  │ Service  │ │ Service  │ │ Service  │ │ Service  │          │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘          │
+│                                                                  │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐          │
+│  │Notification│ │Analytics│ │Forecasting││Recommend │          │
+│  │ Service  │ │ Service  │ │ Service  │ │ Service  │          │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘          │
+│                                                                  │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐          │
+│  │ Search   │ │ Document │ │  Audit   │ │  Admin   │          │
+│  │ Service  │ │ Service  │ │ Service  │ │ Service  │          │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘          │
+│                                                                  │
+│  ┌──────────┐                                                   │
+│  │AI Copilot│                                                   │
+│  │ Service  │                                                   │
+│  └──────────┘                                                   │
+└─────────────────────────────┬───────────────────────────────────┘
+                              │
+┌─────────────────────────────┴───────────────────────────────────┐
+│                      DATA LAYER                                  │
+│                                                                  │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐          │
+│  │ Supabase │ │  Redis   │ │Elastic   │ │  Kafka   │          │
+│  │(Postgres)│ │ Cluster  │ │ Search   │ │ Cluster  │          │
+│  │ + RLS    │ │          │ │          │ │          │          │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘          │
+│                                                                  │
+│  ┌──────────┐ ┌──────────┐                                     │
+│  │ Supabase │ │ pgvector │                                     │
+│  │ Storage  │ │(vectors) │                                     │
+│  └──────────┘ └──────────┘                                     │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# 3. Multi-Tenancy Architecture
+
+## 3.1 Tenant Isolation Strategy
+
+### Shared Infrastructure (Starter & Growth Plans)
+- **Row-Level Security (RLS)**: All tables include `tenant_id` column
+- **Supabase RLS Policies**: PostgreSQL RLS policies enforce tenant isolation
+- **Application-Level Enforcement**: Middleware injects `tenant_id` into all queries
+- **Shared compute**: All tenants share the same service instances
+
+### Dedicated Infrastructure (Enterprise Plan)
+- **Dedicated database**: Separate Supabase project per enterprise tenant
+- **Dedicated compute**: Isolated Kubernetes namespace
+- **Custom domain**: CNAME mapping to tenant-specific endpoints
+- **Custom branding**: Tenant-specific UI themes, logos, colors
+
+## 3.2 Tenant Data Model
+
+```sql
+-- Every table includes these columns
+tenant_id       UUID NOT NULL REFERENCES tenants(id),
+created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+created_by      UUID REFERENCES users(id),
+updated_by      UUID REFERENCES users(id),
+is_deleted      BOOLEAN NOT NULL DEFAULT FALSE,
+deleted_at      TIMESTAMPTZ
+```
+
+## 3.3 RLS Policy Pattern
+
+```sql
+-- Example RLS policy for products table
+ALTER TABLE products ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY tenant_isolation ON products
+  USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+
+CREATE POLICY tenant_insert ON products
+  FOR INSERT
+  WITH CHECK (tenant_id = current_setting('app.current_tenant_id')::UUID);
+```
+
+---
+
+# 4. Authentication Architecture
+
+## 4.1 Authentication Flow
+
+```
+┌─────────┐     ┌───────────┐     ┌──────────────┐     ┌──────────┐
+│  Client  │────>│ API       │────>│  Identity    │────>│ Supabase │
+│  (Web/   │     │ Gateway   │     │  Service     │     │   Auth   │
+│  Mobile) │<────│           │<────│              │<────│          │
+└─────────┘     └───────────┘     └──────────────┘     └──────────┘
+```
+
+## 4.2 Token Strategy
+
+| Token | Storage | Lifetime | Purpose |
+|-------|---------|----------|---------|
+| Access Token (JWT) | Memory / httpOnly cookie | 15 minutes | API authentication |
+| Refresh Token | httpOnly cookie | 30 days | Token renewal |
+| Session Token | Supabase | 7 days | Session management |
+| API Key | Database | Configurable | Service-to-service / external API |
+
+## 4.3 JWT Payload Structure
+
+```json
+{
+  "sub": "user-uuid",
+  "tenant_id": "tenant-uuid",
+  "org_id": "org-uuid",
+  "roles": ["retail_owner"],
+  "permissions": ["inventory:read", "inventory:write", "orders:read"],
+  "iat": 1719561600,
+  "exp": 1719562500,
+  "iss": "smartsupply-ai"
+}
+```
+
+## 4.4 MFA Implementation
+
+| Method | Implementation | Priority |
+|--------|---------------|----------|
+| TOTP | Google Authenticator / Authy compatible | P0 |
+| SMS OTP | Twilio SMS (6-digit, 5-min expiry) | P0 |
+| Email OTP | SendGrid (6-digit, 10-min expiry) | P1 |
+| Biometric | Device biometrics via WebAuthn | P2 |
+
+---
+
+# 5. Authorization — RBAC Model
+
+## 5.1 Permission Hierarchy
+
+```
+Super Admin (Platform)
+  └── Platform Admin
+        └── Tenant Admin (Retail Owner / Supplier Owner)
+              └── Manager (Retail Manager)
+                    └── Staff (Store Employee / Supplier Staff)
+                          └── Viewer (Read-only)
+```
+
+## 5.2 Permission Matrix
+
+| Resource | Action | Super Admin | Platform Admin | Retail Owner | Retail Manager | Store Employee | Supplier Owner | Supplier Staff | Delivery Partner |
+|----------|--------|:-----------:|:--------------:|:------------:|:--------------:|:--------------:|:--------------:|:--------------:|:---------------:|
+| Tenants | CRUD | ✓ | ✓ | — | — | — | — | — | — |
+| Organizations | CRUD | ✓ | ✓ | ✓ | R | — | ✓ | R | — |
+| Users | CRUD | ✓ | ✓ | ✓ | R | — | ✓ | R | — |
+| Products | CRUD | ✓ | R | ✓ | ✓ | ✓ | ✓ | ✓ | — |
+| Inventory | CRUD | ✓ | R | ✓ | ✓ | CRU | — | — | — |
+| Stock Movements | CRU | ✓ | R | ✓ | ✓ | CRU | — | — | — |
+| Purchase Orders | CRUD | ✓ | R | ✓ | ✓ | CR | — | R | — |
+| Marketplace | R | ✓ | ✓ | ✓ | ✓ | R | ✓ | ✓ | — |
+| Listings | CRUD | ✓ | ✓ | — | — | — | ✓ | ✓ | — |
+| Orders | CRUD | ✓ | ✓ | ✓ | ✓ | R | ✓ | ✓ | R |
+| Shipments | CRUD | ✓ | ✓ | R | R | — | ✓ | ✓ | ✓ |
+| Payments | CRUD | ✓ | ✓ | ✓ | R | — | ✓ | R | — |
+| Analytics | R | ✓ | ✓ | ✓ | ✓ | — | ✓ | R | — |
+| Settings | CRUD | ✓ | ✓ | ✓ | R | — | ✓ | — | — |
+| Audit Logs | R | ✓ | ✓ | ✓ | — | — | ✓ | — | — |
+
+## 5.3 Feature Flags
+
+```python
+FEATURE_FLAGS = {
+    "starter": {
+        "max_products": 500,
+        "max_locations": 1,
+        "max_users": 2,
+        "max_suppliers": 10,
+        "max_orders_per_month": 500,
+        "ai_forecasting": False,
+        "ai_copilot": False,
+        "api_access": False,
+        "advanced_analytics": False,
+        "custom_branding": False,
+        "custom_domain": False,
+    },
+    "growth": {
+        "max_products": 5000,
+        "max_locations": 5,
+        "max_users": 10,
+        "max_suppliers": 50,
+        "max_orders_per_month": 5000,
+        "ai_forecasting": True,
+        "ai_copilot": True,  # limited queries
+        "api_access": True,
+        "advanced_analytics": True,
+        "custom_branding": False,
+        "custom_domain": False,
+    },
+    "enterprise": {
+        "max_products": -1,  # unlimited
+        "max_locations": -1,
+        "max_users": -1,
+        "max_suppliers": -1,
+        "max_orders_per_month": -1,
+        "ai_forecasting": True,
+        "ai_copilot": True,
+        "api_access": True,
+        "advanced_analytics": True,
+        "custom_branding": True,
+        "custom_domain": True,
+    }
+}
+```
+
+---
+
+# 6. API Standards
+
+## 6.1 Base URL Structure
+
+```
+Production:  https://api.smartsupply.ai/v1
+Staging:     https://api-staging.smartsupply.ai/v1
+Development: http://localhost:8000/api/v1
+```
+
+## 6.2 REST Conventions
+
+| Method | Usage | Idempotent |
+|--------|-------|:----------:|
+| GET | Retrieve resource(s) | ✓ |
+| POST | Create resource | ✗ |
+| PUT | Full update | ✓ |
+| PATCH | Partial update | ✓ |
+| DELETE | Soft delete resource | ✓ |
+
+## 6.3 URL Patterns
+
+```
+GET    /v1/products                    # List products (paginated)
+POST   /v1/products                    # Create product
+GET    /v1/products/{id}               # Get product
+PUT    /v1/products/{id}               # Update product
+DELETE /v1/products/{id}               # Soft delete product
+GET    /v1/products/{id}/variants      # List product variants
+POST   /v1/products/{id}/variants      # Create variant
+GET    /v1/products/{id}/stock         # Get stock levels
+```
+
+## 6.4 Standard Response Format
+
+### Success Response
+```json
+{
+  "success": true,
+  "data": {},
+  "meta": {
+    "request_id": "req_abc123",
+    "timestamp": "2026-06-16T08:00:00Z"
+  }
+}
+```
+
+### Paginated Response
+```json
+{
+  "success": true,
+  "data": [],
+  "pagination": {
+    "page": 1,
+    "page_size": 20,
+    "total_items": 150,
+    "total_pages": 8,
+    "has_next": true,
+    "has_previous": false
+  },
+  "meta": {
+    "request_id": "req_abc123",
+    "timestamp": "2026-06-16T08:00:00Z"
+  }
+}
+```
+
+### Error Response
+```json
+{
+  "success": false,
+  "error": {
+    "code": "PRODUCT_NOT_FOUND",
+    "message": "Product with ID 'abc123' not found.",
+    "details": [],
+    "documentation_url": "https://docs.smartsupply.ai/errors/PRODUCT_NOT_FOUND"
+  },
+  "meta": {
+    "request_id": "req_abc123",
+    "timestamp": "2026-06-16T08:00:00Z"
+  }
+}
+```
+
+## 6.5 Error Codes
+
+| HTTP Status | Error Code | Description |
+|:-----------:|-----------|------------|
+| 400 | VALIDATION_ERROR | Request validation failed |
+| 400 | INVALID_PARAMETER | Invalid query/path parameter |
+| 401 | UNAUTHORIZED | Missing or invalid authentication |
+| 401 | TOKEN_EXPIRED | JWT access token expired |
+| 403 | FORBIDDEN | Insufficient permissions |
+| 403 | TENANT_MISMATCH | Cross-tenant access attempt |
+| 403 | FEATURE_NOT_AVAILABLE | Feature not in subscription plan |
+| 403 | USAGE_LIMIT_EXCEEDED | Plan usage limit exceeded |
+| 404 | NOT_FOUND | Resource not found |
+| 409 | CONFLICT | Resource conflict (duplicate SKU, etc.) |
+| 409 | OPTIMISTIC_LOCK_ERROR | Concurrent modification conflict |
+| 422 | UNPROCESSABLE_ENTITY | Business rule violation |
+| 429 | RATE_LIMIT_EXCEEDED | Too many requests |
+| 500 | INTERNAL_ERROR | Internal server error |
+| 503 | SERVICE_UNAVAILABLE | Service temporarily unavailable |
+
+## 6.6 Pagination
+
+```
+GET /v1/products?page=1&page_size=20&sort_by=name&sort_order=asc
+```
+
+| Parameter | Type | Default | Max | Description |
+|-----------|------|---------|-----|-------------|
+| page | int | 1 | — | Page number |
+| page_size | int | 20 | 100 | Items per page |
+| sort_by | string | created_at | — | Sort field |
+| sort_order | string | desc | — | asc or desc |
+
+## 6.7 Filtering
+
+```
+GET /v1/products?category_id=abc&brand_id=xyz&min_price=100&max_price=500&status=active
+```
+
+## 6.8 Rate Limiting
+
+| Plan | Rate Limit | Burst |
+|------|-----------|-------|
+| Starter | 100 req/min | 20 |
+| Growth | 500 req/min | 50 |
+| Enterprise | 2000 req/min | 200 |
+| Internal Service | 10000 req/min | 500 |
+
+Rate limit headers:
+```
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 95
+X-RateLimit-Reset: 1719561660
+```
+
+---
+
+# 7. Service Specifications
+
+## 7.1 Identity Service
+
+**Responsibilities**: Authentication, token management, MFA, OAuth, session management
+
+**Database Tables**: users_auth, sessions, mfa_configs, oauth_providers, api_keys, password_reset_tokens, login_attempts
+
+**Key APIs**:
+- POST /v1/auth/register
+- POST /v1/auth/login
+- POST /v1/auth/login/otp
+- POST /v1/auth/refresh
+- POST /v1/auth/logout
+- POST /v1/auth/mfa/setup
+- POST /v1/auth/mfa/verify
+- POST /v1/auth/password/reset
+- POST /v1/auth/password/change
+
+**Kafka Topics Published**:
+- `auth.user.registered`
+- `auth.user.logged_in`
+- `auth.user.logged_out`
+- `auth.mfa.enabled`
+- `auth.password.changed`
+
+**Scaling**: Stateless, horizontal scaling behind load balancer. Session state in Redis.
+
+---
+
+## 7.2 User Service
+
+**Responsibilities**: User profiles, preferences, avatars, user search
+
+**Database Tables**: user_profiles, user_preferences, user_addresses, user_avatars
+
+**Key APIs**:
+- GET /v1/users/me
+- PUT /v1/users/me
+- GET /v1/users/{id}
+- GET /v1/users (admin)
+- PUT /v1/users/{id} (admin)
+- DELETE /v1/users/{id}
+- GET /v1/users/me/preferences
+- PUT /v1/users/me/preferences
+- POST /v1/users/me/avatar
+
+**Kafka Topics Published**:
+- `user.profile.updated`
+- `user.deactivated`
+
+**Scaling**: Low traffic, 2-3 replicas sufficient.
+
+---
+
+## 7.3 Organization Service
+
+**Responsibilities**: Organization management, teams, departments, invitations, settings, branding
+
+**Database Tables**: organizations, org_settings, org_branding, teams, team_members, departments, invitations, org_addresses
+
+**Key APIs**:
+- POST /v1/organizations
+- GET /v1/organizations/{id}
+- PUT /v1/organizations/{id}
+- GET /v1/organizations/{id}/settings
+- PUT /v1/organizations/{id}/settings
+- POST /v1/organizations/{id}/members/invite
+- GET /v1/organizations/{id}/members
+- POST /v1/organizations/{id}/teams
+- GET /v1/organizations/{id}/teams
+- PUT /v1/organizations/{id}/branding
+
+**Kafka Topics Published**:
+- `org.created`
+- `org.updated`
+- `org.member.invited`
+- `org.member.joined`
+- `org.member.removed`
+
+**Scaling**: Low traffic, 2-3 replicas.
+
+---
+
+## 7.4 Catalog Service
+
+**Responsibilities**: Product management, categories, brands, attributes, variants, images
+
+**Database Tables**: products, product_variants, categories, brands, product_attributes, attribute_values, product_images, product_tags, units_of_measure, tax_categories, hsn_codes
+
+**Key APIs**:
+- CRUD /v1/products
+- CRUD /v1/products/{id}/variants
+- CRUD /v1/categories
+- CRUD /v1/brands
+- CRUD /v1/products/{id}/attributes
+- POST /v1/products/{id}/images
+- POST /v1/products/import
+- GET /v1/products/export
+
+**Kafka Topics Published**:
+- `catalog.product.created`
+- `catalog.product.updated`
+- `catalog.product.deleted`
+- `catalog.category.updated`
+
+**Scaling**: Medium traffic, 3-5 replicas. Products are read-heavy — cache in Redis.
+
+---
+
+## 7.5 Inventory Service
+
+**Responsibilities**: Stock levels, stock movements, batch tracking, expiry tracking, warehouses, locations, stock counts, adjustments, transfers
+
+**Database Tables**: inventory_items, stock_movements, stock_adjustments, stock_transfers, stock_counts, count_items, batches, serial_numbers, warehouses, warehouse_locations, reorder_rules, inventory_snapshots
+
+**Key APIs**:
+- GET /v1/inventory/products/{id}/stock
+- POST /v1/inventory/stock-in
+- POST /v1/inventory/stock-out
+- POST /v1/inventory/adjustments
+- POST /v1/inventory/transfers
+- POST /v1/inventory/counts
+- GET /v1/inventory/batches
+- GET /v1/inventory/expiring
+- GET /v1/inventory/low-stock
+- GET /v1/inventory/dead-stock
+- CRUD /v1/warehouses
+- CRUD /v1/warehouses/{id}/locations
+- GET /v1/inventory/snapshots
+- GET /v1/inventory/movements
+
+**Kafka Topics Published**:
+- `inventory.stock.updated`
+- `inventory.stock.low`
+- `inventory.stock.zero`
+- `inventory.expiry.approaching`
+- `inventory.adjustment.created`
+- `inventory.transfer.created`
+- `inventory.count.completed`
+
+**Scaling**: High traffic, 5-10 replicas. Stock updates are write-heavy. Use Redis for real-time stock level caching.
+
+---
+
+## 7.6 Supplier Service
+
+**Responsibilities**: Supplier profiles, verification, certifications, supplier products, supplier ratings
+
+**Database Tables**: supplier_profiles, supplier_products, supplier_pricing, supplier_certifications, supplier_verification, supplier_ratings, supplier_reviews, supplier_performance_metrics
+
+**Key APIs**:
+- CRUD /v1/suppliers
+- GET /v1/suppliers/{id}/products
+- GET /v1/suppliers/{id}/ratings
+- POST /v1/suppliers/{id}/ratings
+- GET /v1/suppliers/{id}/performance
+- PUT /v1/suppliers/{id}/verification (admin)
+- GET /v1/suppliers/search
+- GET /v1/suppliers/compare
+
+**Kafka Topics Published**:
+- `supplier.registered`
+- `supplier.verified`
+- `supplier.product.updated`
+- `supplier.rating.submitted`
+
+**Scaling**: Medium traffic, 3-5 replicas.
+
+---
+
+## 7.7 Marketplace Service
+
+**Responsibilities**: Product listings, shopping cart, wishlist, promotions, featured products, checkout orchestration
+
+**Database Tables**: marketplace_listings, listing_pricing, cart_items, wishlists, promotions, promo_codes, featured_products, marketplace_categories
+
+**Key APIs**:
+- GET /v1/marketplace/listings
+- GET /v1/marketplace/listings/{id}
+- CRUD /v1/marketplace/cart
+- POST /v1/marketplace/checkout
+- GET /v1/marketplace/promotions
+- CRUD /v1/marketplace/wishlists
+- GET /v1/marketplace/featured
+- GET /v1/marketplace/search
+
+**Kafka Topics Published**:
+- `marketplace.listing.created`
+- `marketplace.listing.updated`
+- `marketplace.cart.updated`
+- `marketplace.checkout.initiated`
+- `marketplace.promotion.applied`
+
+**Scaling**: High traffic during peak hours, 5-10 replicas. Listings cached in Redis + Elasticsearch.
+
+---
+
+## 7.8 Procurement Service
+
+**Responsibilities**: Purchase orders, RFQs, quotations, approval workflows, goods receipt
+
+**Database Tables**: purchase_orders, po_items, rfqs, rfq_items, quotations, quotation_items, approval_workflows, approval_steps, approval_requests, goods_receipts, grn_items, po_templates
+
+**Key APIs**:
+- CRUD /v1/purchase-orders
+- POST /v1/purchase-orders/{id}/submit
+- POST /v1/purchase-orders/{id}/approve
+- POST /v1/purchase-orders/{id}/reject
+- CRUD /v1/rfqs
+- POST /v1/rfqs/{id}/send
+- CRUD /v1/quotations
+- POST /v1/quotations/{id}/accept
+- POST /v1/goods-receipts
+- CRUD /v1/approval-workflows
+
+**Kafka Topics Published**:
+- `procurement.po.created`
+- `procurement.po.submitted`
+- `procurement.po.approved`
+- `procurement.po.rejected`
+- `procurement.rfq.created`
+- `procurement.quotation.received`
+- `procurement.grn.created`
+
+**Scaling**: Medium traffic, 3-5 replicas. Approval workflows are stateful — use database transactions.
+
+---
+
+## 7.9 Order Service
+
+**Responsibilities**: Marketplace order management, order lifecycle, returns
+
+**Database Tables**: orders, order_items, order_status_history, returns, return_items, order_notes
+
+**Key APIs**:
+- POST /v1/orders
+- GET /v1/orders
+- GET /v1/orders/{id}
+- PUT /v1/orders/{id}/status
+- POST /v1/orders/{id}/cancel
+- POST /v1/orders/{id}/returns
+- GET /v1/orders/{id}/tracking
+
+**Kafka Topics Published**:
+- `order.created`
+- `order.confirmed`
+- `order.shipped`
+- `order.delivered`
+- `order.cancelled`
+- `order.return.requested`
+- `order.return.completed`
+
+**Scaling**: High traffic, 5-10 replicas. Order creation is critical path — optimize for latency.
+
+---
+
+## 7.10 Shipment Service
+
+**Responsibilities**: Shipment creation, tracking, delivery assignment, proof of delivery
+
+**Database Tables**: shipments, shipment_items, shipment_tracking, delivery_assignments, proof_of_delivery, delivery_routes
+
+**Key APIs**:
+- POST /v1/shipments
+- GET /v1/shipments/{id}
+- PUT /v1/shipments/{id}/status
+- POST /v1/shipments/{id}/assign
+- POST /v1/shipments/{id}/proof-of-delivery
+- GET /v1/shipments/{id}/tracking
+
+**Kafka Topics Published**:
+- `shipment.created`
+- `shipment.dispatched`
+- `shipment.in_transit`
+- `shipment.delivered`
+- `shipment.failed`
+
+**Scaling**: Medium traffic, 3-5 replicas.
+
+---
+
+## 7.11 Payment Service
+
+**Responsibilities**: Payment processing, refunds, settlements, credit management
+
+**Database Tables**: payment_transactions, payment_methods, refunds, settlements, credit_accounts, credit_transactions, bnpl_records
+
+**Key APIs**:
+- POST /v1/payments/initiate
+- POST /v1/payments/verify
+- POST /v1/payments/{id}/refund
+- GET /v1/payments/{id}
+- GET /v1/payments/settlements
+- GET /v1/credit/balance
+- POST /v1/credit/apply
+
+**Kafka Topics Published**:
+- `payment.initiated`
+- `payment.completed`
+- `payment.failed`
+- `payment.refunded`
+- `credit.applied`
+- `credit.payment.due`
+
+**Scaling**: Medium traffic, 3-5 replicas. Payment operations must be idempotent.
+
+---
+
+## 7.12 Subscription Service
+
+**Responsibilities**: Plan management, subscription lifecycle, usage metering, billing
+
+**Database Tables**: subscription_plans, plan_features, subscriptions, subscription_history, usage_meters, usage_records, billing_invoices, billing_payments
+
+**Key APIs**:
+- GET /v1/subscription/plans
+- POST /v1/subscription/subscribe
+- PUT /v1/subscription/upgrade
+- PUT /v1/subscription/downgrade
+- POST /v1/subscription/cancel
+- GET /v1/subscription/usage
+- GET /v1/subscription/invoices
+
+**Kafka Topics Published**:
+- `subscription.created`
+- `subscription.upgraded`
+- `subscription.cancelled`
+- `subscription.payment.due`
+- `subscription.usage.limit_approaching`
+
+**Scaling**: Low traffic, 2-3 replicas.
+
+---
+
+## 7.13 Notification Service
+
+**Responsibilities**: Multi-channel notification delivery, templates, preferences
+
+**Database Tables**: notification_templates, notifications, notification_preferences, notification_logs, notification_channels
+
+**Key APIs**:
+- POST /v1/notifications/send
+- GET /v1/notifications
+- PUT /v1/notifications/{id}/read
+- GET /v1/notifications/preferences
+- PUT /v1/notifications/preferences
+- CRUD /v1/notifications/templates (admin)
+
+**Kafka Topics Consumed** (event-driven):
+- Listens to events from ALL other services
+- Routes to appropriate notification channels
+
+**Scaling**: High throughput, 5-10 replicas. Async processing via Kafka.
+
+---
+
+## 7.14 Analytics Service
+
+**Responsibilities**: KPI calculation, dashboard data, reports, data exports
+
+**Database Tables**: dashboard_configs, dashboard_widgets, report_configs, report_schedules, report_exports, kpi_snapshots, analytics_cache
+
+**Key APIs**:
+- GET /v1/analytics/dashboard
+- GET /v1/analytics/kpis
+- GET /v1/analytics/reports/{type}
+- POST /v1/analytics/reports/generate
+- GET /v1/analytics/reports/{id}/download
+- GET /v1/analytics/sales
+- GET /v1/analytics/inventory
+- GET /v1/analytics/procurement
+- GET /v1/analytics/suppliers
+
+**Scaling**: Read-heavy, computation-intensive. 3-5 replicas + Redis caching for dashboard data.
+
+---
+
+## 7.15 Forecasting Service
+
+**Responsibilities**: Demand prediction, reorder intelligence, model training
+
+**Database Tables**: forecast_models, model_versions, predictions, prediction_accuracy, training_jobs, feature_store
+
+**Key APIs**:
+- GET /v1/forecasting/products/{id}/demand
+- GET /v1/forecasting/products/{id}/reorder
+- POST /v1/forecasting/models/train
+- GET /v1/forecasting/accuracy
+- GET /v1/forecasting/seasonal-patterns
+
+**Kafka Topics Published**:
+- `forecast.prediction.generated`
+- `forecast.reorder.suggested`
+- `forecast.model.trained`
+
+**Scaling**: CPU-intensive. Dedicated compute nodes. Batch predictions cached in Redis.
+
+---
+
+## 7.16 Recommendation Service
+
+**Responsibilities**: Supplier recommendations, product recommendations, inventory optimization suggestions
+
+**Database Tables**: recommendation_models, recommendations, recommendation_feedback, optimization_suggestions
+
+**Key APIs**:
+- GET /v1/recommendations/suppliers/{product_id}
+- GET /v1/recommendations/products
+- GET /v1/recommendations/inventory-optimizations
+- POST /v1/recommendations/{id}/feedback
+
+**Scaling**: Medium traffic, 2-3 replicas. Pre-computed recommendations cached.
+
+---
+
+## 7.17 Search Service
+
+**Responsibilities**: Full-text search, autocomplete, search analytics
+
+**Database Tables**: search_synonyms, search_analytics, search_configs
+
+**Key APIs**:
+- GET /v1/search/products
+- GET /v1/search/suppliers
+- GET /v1/search/orders
+- GET /v1/search/suggest
+
+**Technology**: Elasticsearch with custom analyzers for product names, regional language support.
+
+**Scaling**: Elasticsearch cluster with 3+ data nodes. Read-heavy.
+
+---
+
+## 7.18 Document Service
+
+**Responsibilities**: File upload, document management, contracts, digital signatures
+
+**Database Tables**: documents, document_versions, contracts, contract_terms, digital_signatures, compliance_documents
+
+**Key APIs**:
+- POST /v1/documents/upload
+- GET /v1/documents/{id}
+- GET /v1/documents/{id}/download
+- CRUD /v1/contracts
+- POST /v1/documents/{id}/sign
+
+**Storage**: Supabase Storage with CDN.
+
+**Scaling**: Low traffic, 2-3 replicas.
+
+---
+
+## 7.19 Audit Service
+
+**Responsibilities**: Audit logging, compliance reporting, data change tracking
+
+**Database Tables**: audit_logs, data_change_logs, compliance_checks, compliance_reports, security_events
+
+**Key APIs**:
+- GET /v1/audit/logs
+- GET /v1/audit/logs/{entity_type}/{entity_id}
+- GET /v1/audit/compliance/reports
+- GET /v1/audit/security-events
+
+**Kafka Topics Consumed**: ALL domain events for audit trail.
+
+**Scaling**: High-throughput write, 5+ replicas. Kafka consumer group for parallel processing.
+
+---
+
+## 7.20 Admin Service
+
+**Responsibilities**: Platform administration, tenant management, moderation, support
+
+**Database Tables**: admin_configs, moderation_queue, support_tickets, support_messages, platform_announcements, feature_overrides
+
+**Key APIs**:
+- CRUD /v1/admin/tenants
+- GET /v1/admin/users
+- PUT /v1/admin/users/{id}/status
+- GET /v1/admin/moderation/queue
+- PUT /v1/admin/moderation/{id}/approve
+- CRUD /v1/admin/support/tickets
+- POST /v1/admin/announcements
+- PUT /v1/admin/features/{tenant_id}
+
+**Scaling**: Low traffic, 2-3 replicas.
+
+---
+
+## 7.21 AI Copilot Service
+
+**Responsibilities**: Natural language interface, chat, context management, RAG
+
+**Database Tables**: copilot_conversations, copilot_messages, copilot_context, copilot_feedback, vector_embeddings
+
+**Key APIs**:
+- POST /v1/copilot/chat
+- GET /v1/copilot/conversations
+- GET /v1/copilot/conversations/{id}
+- POST /v1/copilot/feedback
+
+**Technology**: OpenAI GPT-4o + pgvector RAG + context-aware prompting
+
+**Scaling**: Medium traffic, 3-5 replicas. GPU nodes for self-hosted Llama fallback.
+
+---
+
+# 8. Inventory Engine Technical Design
+
+## 8.1 Stock Calculation
+
+```
+Available Stock = Received - Sold - Damaged - Expired - Transferred Out + Transferred In + Adjusted
+```
+
+## 8.2 Stock Movement Types
+
+| Movement Type | Direction | Source |
+|--------------|:---------:|--------|
+| PURCHASE_RECEIPT | IN | Goods Receipt from PO |
+| SALES | OUT | POS / Order |
+| RETURN_FROM_CUSTOMER | IN | Customer Return |
+| RETURN_TO_SUPPLIER | OUT | Supplier Return |
+| TRANSFER_IN | IN | Inter-location Transfer |
+| TRANSFER_OUT | OUT | Inter-location Transfer |
+| ADJUSTMENT_POSITIVE | IN | Manual Adjustment |
+| ADJUSTMENT_NEGATIVE | OUT | Manual Adjustment |
+| DAMAGE | OUT | Damage Write-off |
+| EXPIRY | OUT | Expired Product Write-off |
+| OPENING_STOCK | IN | Initial Setup |
+
+## 8.3 Reorder Logic
+
+```python
+def should_reorder(product_id: str) -> ReorderSuggestion:
+    current_stock = get_current_stock(product_id)
+    reorder_level = get_reorder_level(product_id)
+    avg_daily_sales = get_avg_daily_sales(product_id, days=30)
+    supplier_lead_time = get_supplier_lead_time(product_id)
+    safety_stock = avg_daily_sales * safety_factor
+
+    if current_stock <= reorder_level:
+        days_of_stock = current_stock / avg_daily_sales
+        reorder_qty = (avg_daily_sales * (supplier_lead_time + review_period)) + safety_stock - current_stock
+        return ReorderSuggestion(
+            product_id=product_id,
+            current_stock=current_stock,
+            reorder_quantity=max(reorder_qty, min_order_qty),
+            urgency="critical" if days_of_stock < supplier_lead_time else "normal",
+            estimated_stockout_date=today + timedelta(days=days_of_stock)
+        )
+```
+
+---
+
+# 9. Procurement Engine Technical Design
+
+## 9.1 Supplier Ranking Algorithm
+
+```python
+def rank_suppliers(product_id: str) -> list[SupplierRanking]:
+    suppliers = get_suppliers_for_product(product_id)
+
+    for supplier in suppliers:
+        # Price Score (0-30): Lower is better
+        price_score = 30 * (1 - (supplier.price - min_price) / (max_price - min_price))
+
+        # Availability Score (0-25): In-stock preferred
+        availability_score = 25 if supplier.in_stock else 0
+
+        # Delivery Score (0-25): Faster is better
+        delivery_score = 25 * (1 - supplier.lead_time_days / max_lead_time)
+
+        # Rating Score (0-20): Higher is better
+        rating_score = 20 * (supplier.avg_rating / 5.0)
+
+        supplier.total_score = price_score + availability_score + delivery_score + rating_score
+
+    return sorted(suppliers, key=lambda s: s.total_score, reverse=True)
+```
+
+---
+
+# 10. Forecasting Engine Technical Design
+
+## 10.1 Model Pipeline
+
+```
+Raw Data → Feature Engineering → Model Training → Prediction → Post-Processing → Storage
+```
+
+## 10.2 Features
+
+| Feature Category | Features |
+|-----------------|----------|
+| Historical Sales | Daily sales qty, weekly sales qty, monthly sales qty, rolling averages (7d, 14d, 30d) |
+| Inventory | Current stock, days of stock, reorder frequency |
+| Temporal | Day of week, month, quarter, year, is_weekend, is_holiday |
+| Seasonal | Festival seasons, weather proxy (month-based) |
+| Product | Category, brand, price range, product age |
+| External | Holiday calendar, local events (future) |
+
+## 10.3 Models
+
+| Model | Use Case | Training Frequency |
+|-------|---------|-------------------|
+| XGBoost | Primary demand forecasting | Weekly |
+| Prophet | Seasonal decomposition, trend analysis | Monthly |
+| LSTM | Long-term pattern recognition | Monthly |
+| Ensemble | Final prediction (weighted average) | Weekly |
+
+## 10.4 Accuracy Metrics
+
+| Metric | Target |
+|--------|--------|
+| MAPE (Mean Absolute Percentage Error) | < 15% |
+| RMSE (Root Mean Square Error) | < 20% of mean |
+| Forecast Bias | < ±5% |
+
+---
+
+# 11. Search Architecture
+
+## 11.1 Elasticsearch Indexes
+
+| Index | Source | Fields |
+|-------|--------|--------|
+| `products` | Catalog Service | name, description, category, brand, sku, barcode, tags |
+| `suppliers` | Supplier Service | name, description, location, categories, rating |
+| `marketplace_listings` | Marketplace Service | product_name, supplier_name, price, category, availability |
+| `orders` | Order Service | order_number, status, customer, items |
+
+## 11.2 Search Features
+
+- Full-text search with relevance scoring
+- Fuzzy matching for typos
+- Autocomplete / search-as-you-type
+- Faceted filtering (category, brand, price range, rating)
+- Geo-based supplier search
+- Synonym handling
+- Regional language support (Hindi, Tamil, etc.)
+
+---
+
+# 12. Notification Architecture
+
+## 12.1 Event-Driven Flow
+
+```
+Service Event → Kafka → Notification Service → Channel Router → Delivery
+                                                    │
+                                    ┌───────────────┼───────────────┐
+                                    │               │               │
+                                 In-App          Email           SMS/Push
+                              (WebSocket)     (SendGrid)      (Twilio/FCM)
+```
+
+## 12.2 Notification Templates
+
+Templates are stored in database with variable interpolation:
+
+```json
+{
+  "template_id": "low_stock_alert",
+  "channel": "email",
+  "subject": "⚠️ Low Stock Alert: {{product_name}}",
+  "body": "Your stock for {{product_name}} (SKU: {{sku}}) has dropped to {{current_qty}} units. Reorder level is {{reorder_level}}. Click here to reorder: {{reorder_url}}"
+}
+```
+
+---
+
+# 13. Reporting Architecture
+
+## 13.1 Report Types
+
+| Report | Data Source | Frequency |
+|--------|-----------|-----------|
+| Sales Summary | Orders + Payments | Real-time |
+| Inventory Valuation | Inventory | Daily snapshot |
+| Stock Movement | Stock Movements | Real-time |
+| Dead Stock | Inventory | Weekly |
+| Supplier Performance | Orders + Shipments + Ratings | Weekly |
+| Procurement Spend | Purchase Orders + Payments | Monthly |
+| Forecast Accuracy | Predictions + Actuals | Weekly |
+| Audit Trail | Audit Logs | On-demand |
+
+## 13.2 Export Formats
+- PDF (generated with reportlab/weasyprint)
+- Excel (generated with openpyxl)
+- CSV
+
+---
+
+# 14. Security Architecture
+
+## 14.1 Encryption
+- **At Rest**: AES-256 via Supabase (PostgreSQL transparent encryption)
+- **In Transit**: TLS 1.3 everywhere
+- **Secrets**: Environment variables + cloud secrets manager
+- **PII**: Column-level encryption for sensitive fields
+
+## 14.2 API Security
+- JWT bearer token authentication
+- API key authentication (service-to-service)
+- CORS configuration (whitelist origins)
+- CSRF protection (state-changing operations)
+- Request body size limits (10MB default, 50MB for file uploads)
+- SQL injection prevention (parameterized queries via SQLAlchemy)
+- XSS prevention (output encoding, CSP headers)
+
+## 14.3 Rate Limiting
+- Per-tenant rate limiting (Redis-based sliding window)
+- Per-API-key rate limiting
+- DDoS protection via API gateway
+
+## 14.4 Audit Logging
+- All state-changing operations logged
+- Log: who, what, when, where, old_value, new_value
+- Immutable audit trail (append-only)
+- Retention: 7 years
+
+---
+
+# 15. DevOps Architecture
+
+## 15.1 CI/CD Pipeline
+
+```
+Code Push → GitHub Actions → Lint/Test → Build → Docker Image → Push to Registry
+    → Deploy to Staging → Integration Tests → Manual Approval → Deploy to Production
+```
+
+## 15.2 Environments
+
+| Environment | Purpose | Infrastructure |
+|------------|---------|---------------|
+| Development | Local development | Docker Compose |
+| Staging | Pre-production testing | Kubernetes (small cluster) |
+| Production | Live traffic | Kubernetes (auto-scaling cluster) |
+
+## 15.3 Monitoring Stack
+
+| Tool | Purpose |
+|------|---------|
+| Prometheus | Metrics collection (CPU, memory, request rates, error rates) |
+| Grafana | Dashboards and visualization |
+| OpenTelemetry | Distributed tracing |
+| ELK Stack | Log aggregation and search |
+| PagerDuty/OpsGenie | Alerting and incident management |
+
+## 15.4 SLA Targets
+
+| Metric | Target |
+|--------|--------|
+| Availability | 99.95% |
+| API Latency (p95) | < 200ms |
+| API Latency (p99) | < 500ms |
+| Error Rate | < 0.1% |
+| Deployment Frequency | Multiple per day |
+| Change Failure Rate | < 5% |
+| MTTR | < 1 hour |
+
+---
+
+# 16. Scalability Architecture
+
+## 16.1 Scaling Targets
+
+| Dimension | Target |
+|-----------|--------|
+| Retailers | 100,000 |
+| Suppliers | 20,000 |
+| Products | 50,000,000 |
+| Orders/day | 1,000,000 |
+| Concurrent Users | 500,000 |
+| Data Volume | 10 TB+ |
+
+## 16.2 Scaling Strategy
+
+- **Horizontal Pod Autoscaling (HPA)**: CPU/memory-based autoscaling
+- **Database**: Supabase with read replicas, connection pooling (PgBouncer)
+- **Caching**: Redis Cluster with 6+ nodes
+- **Search**: Elasticsearch cluster with sharding
+- **Kafka**: Multi-broker cluster with topic partitioning
+- **CDN**: CloudFront/Cloudflare for static assets and images
+- **Load Balancing**: Layer 7 load balancing with health checks
+
+---
+
+# 17. Disaster Recovery
+
+| Parameter | Value |
+|-----------|-------|
+| RPO (Recovery Point Objective) | 15 minutes |
+| RTO (Recovery Time Objective) | 1 hour |
+| Backup Frequency | Continuous WAL streaming + daily full backups |
+| Backup Retention | 30 days |
+| Multi-Region | Active-passive failover |
+| Data Replication | Synchronous within AZ, async cross-region |
+
+---
+
+# 18. AI Copilot Architecture
+
+## 18.1 RAG Pipeline
+
+```
+User Query → Intent Detection → Context Retrieval (pgvector) → Prompt Assembly
+    → LLM (OpenAI/Llama) → Response Generation → Action Extraction → Response
+```
+
+## 18.2 Context Sources
+
+| Source | Data | Embedding Strategy |
+|--------|------|-------------------|
+| Product Catalog | Names, descriptions, categories | Batch embeddings (nightly) |
+| Inventory Data | Stock levels, movements | Real-time context injection |
+| Order History | Recent orders, trends | Summarized context |
+| Supplier Info | Profiles, ratings, products | Batch embeddings (nightly) |
+| Help Documentation | Platform documentation | Static embeddings |
+
+## 18.3 Safety & Guardrails
+- Input sanitization (no prompt injection)
+- Output filtering (no harmful content)
+- Action confirmation (user must approve suggested actions)
+- Rate limiting per user
+- Token budget per query
+- Fallback responses for low-confidence outputs
